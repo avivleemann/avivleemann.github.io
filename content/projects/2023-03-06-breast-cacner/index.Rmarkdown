@@ -1,0 +1,263 @@
+---
+title: single cell Breast cancer
+author: 'Aviv Leemann'
+date: '2023-03-06'
+slug: breast-cancer
+categories: []
+tags: [Breast cancer]
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2023-03-06T17:52:47+02:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup-chunk, echo=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE,
+	dev = "jpeg",
+	dpi = 300,
+	root.dir = "C:/Users/aviv6/Documents/shomron_labs_pc/BCsinglecelldata"
+)
+options(future.globals.maxSize = 8000 * 1024^2)
+```
+
+# single cell Breast cancer -analysis
+
+Breast cancer data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in Breast cancer data.\
+our lab found PALLD express in breast cancr, PALLD expression was examined between different cell type , different cluster groups, alsotop 10 mrker for each cluster was obtained
+
+## libreries
+
+```{r labriries}
+library(pacman)
+library(Seurat)
+labrvec <- c("tidyverse","ggplot2","Matrix","AnnotationDbi","readxl",
+             "Seurat","future","patchwork","stringr")
+pacman::p_load(labrvec,install = TRUE,character.only = TRUE)
+
+
+```
+
+## files
+
+```{r files}
+# reading RDS
+BCdata <- readRDS("BCdatageneral.rds")
+```
+
+## pre-processing
+
+wont be used at the creation of this files because already created and RDS will be use
+
+```{r  preprocessing}
+# define nultiprocess for seurat
+# 
+# Breast.cancer.SCdata<-Read10X(
+#   data.dir = indir ,
+#   gene.column = 1,
+#   unique.features = TRUE,
+#   strip.suffix = FALSE
+# ) 
+# #class(Breast.cancer.SCdata)
+# print(object.size(Breast.cancer.SCdata), units="Gb")
+# # head(Breast.cancer.SCdata)
+# mini.atlas <- read.csv('C:/Users/user/Desktop/BCsinglecelldata/Whole_miniatlas_meta.csv')
+# gene_targets <- read_excel("C:/Users/user/Desktop/BCsinglecelldata/spikesearchtargetgenes.xlsx",)
+# # summary(mini.atlas)
+# gene_targets <- pull(gene_targets,"Gene name")
+# gene_targets <- gene_targets[!is.na(gene_targets)]
+# gene_targets <- gene_targets[1:128]
+# gene_targets <- gene_targets[!duplicated(gene_targets)]
+# #gene_targets
+# colnames(mini.atlas)[1] <- "NAMES"
+# #mini.atlas
+# rownames(mini.atlas) <- pull(mini.atlas,"NAMES") 
+# #mini.atlas.C <- mini.atlas %>% filter(normal_cell_call == "cancer")
+# cancer.cell.types <- pull(mini.atlas,"normal_cell_call") %>%  unique()
+# #cancer.cell.types
+# mini.atlas <- mini.atlas[-1,-1]
+# # head(mini.atlas)
+# BCdata <- CreateSeuratObject(
+#   Breast.cancer.SCdata,
+#   project = "BC",
+#   assay = "RNA",
+#   min.cells = 0,
+#   min.features = 0,
+#   names.field = 1,
+#   names.delim = "_",
+#   meta.data = mini.atlas
+# )
+
+# looking at the idents in seurat object
+# head(BCdata[[]])
+# #BCdata
+# BCdata@meta.data$project <- "BC"
+# BCdata <- StashIdent(object = BCdata, save.name = "old.ident")
+# Idents(object = BCdata) <- "project"
+# Idents(object = BCdata)
+#BCdata <- subset(x = BCdata, idents = "cancer")
+# row.names(BCdata)
+# # BCdata[[]]
+# # extract the mitochondrial DNA
+# BCdata[["Percent_mito"]] <-unlist(BCdata[["Percent_mito"]]) %>% as.numeric()
+# BCdata[["nCount_RNA"]] <-unlist(BCdata[["nCount_RNA"]]) %>% as.numeric()
+# BCdata[["nFeature_RNA"]] <-unlist(BCdata[["nFeature_RNA"]]) %>% as.numeric()
+# BCdata[["percent.mt"]] <- PercentageFeatureSet(object = BCdata, pattern = "^MT-")
+# #Idents(object = BCdata) <- "celltype_subset"
+# BCdata[["normal_cell_call"]] %>%  unique()
+# fixing to column Percent_mito as numeric
+
+```
+
+## Feature-scatter & violin
+
+```{r feature scatter}
+
+Idents(BCdata) <- "Breast cancer"
+
+plot1 <- FeatureScatter(BCdata, feature1 = "nCount_RNA", feature2 = "Percent_mito",raster=FALSE)
+plot2 <- FeatureScatter(BCdata, feature1 = "nCount_RNA", feature2 = "nFeature_RNA",raster=FALSE)
+plot2 + plot1
+VlnPlot(BCdata, features = c("nFeature_RNA", "nCount_RNA","Percent_mito"), ncol = 3,pt.size  = 0)
+VlnPlot(BCdata, features = c("nFeature_RNA", "nCount_RNA","Percent_mito"), ncol = 3)
+
+
+```
+
+## variable Feature-plot
+
+BCdata \<- NormalizeData(BCdata)
+
+BCdata \<- FindVariableFeatures(BCdata, selection.method = "vst", nfeatures = 2000)
+
+```{r variable Feature plot}
+
+## what are our variable genes ?
+top10 <- head(VariableFeatures(BCdata), 10)
+top10
+# plot variable features with and without labels
+plot1 <- VariableFeaturePlot(BCdata)
+plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE)
+plot1 + plot2
+
+```
+
+## PCA-plot
+
+```{r PCA plot}
+# all_genes <- rownames(BCdata)
+# # all_genes
+# BCdata <- ScaleData(BCdata)
+# BCdata <- RunPCA(BCdata, features = VariableFeatures(object = BCdata))
+VizDimLoadings(BCdata, dims = 1:2, reduction = "pca")
+DimPlot(BCdata, reduction = "pca")
+```
+
+## Heat-map
+
+```{r heatmap }
+# Examine and visualize PCA results a few different ways
+#(BCdata[["pca"]], dims = 1:5, nfeatures = 5)
+DimHeatmap(BCdata, dims = 1, cells = 500, balanced = TRUE)
+DimHeatmap(BCdata, dims = 1:9, cells = 500, balanced = TRUE)
+
+```
+
+## JackStrawPlot & ElbowPlot
+
+```{r JackStrawPlot & ElbowPlot}
+
+# BCdata <- JackStraw(BCdata, num.replicate = 100)
+# BCdata <- ScoreJackStraw(BCdata, dims = 1:20)
+JackStrawPlot(BCdata, dims = 1:15)
+ElbowPlot(BCdata)
+
+```
+
+## Umap & tsne
+
+```{r}
+# BCdata <- FindNeighbors(BCdata, dims = 1:10)
+# BCdata <- FindClusters(BCdata, resolution = 0.4)
+# BCdata <- RunUMAP(BCdata, dims = 1:10)
+# BCdata <- RunTSNE(BCdata, dims = 1:10)
+# Look at cluster IDs of the first 5 cells
+head(Idents(BCdata), 5)                     
+DimPlot(BCdata, reduction = "umap",group.by = "celltype_major" ,label = TRUE)
+DimPlot(BCdata, reduction = "tsne",group.by = "celltype_major" ,label = TRUE)
+#saveRDS(BCdata, file = "C:/Users/user/Desktop/BCsinglecelldata/BCdata.rds")
+```
+
+## heat map markers for each cell types major
+
+```{r heat map markers cell type major}
+DimPlot(BCdata, reduction = "umap",group.by ="celltype_major" , label = TRUE, pt.size = 0.5)
+BCdata.markers <- readRDS('BCdata.markers.rds')
+
+# Idents(BCdata) <- "celltype_major"
+# BCdata.markers <- FindAllMarkers(BCdata, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+BCdata.markers %>%
+    group_by(cluster) %>%
+    top_n(n = 10, wt = avg_log2FC) -> top10
+DoHeatmap(BCdata, features = top10$gene) + NoLegend()
+# saveRDS(BCdata.markers, file = "BCdata.markers.rds")
+
+```
+
+## violin plot PALLD
+
+```{r violin plot}
+VlnPlot(BCdata, features = c("PALLD"), sort = TRUE) + NoLegend()
+VlnPlot(BCdata, features = c("PALLD"), sort = TRUE,pt.size  = 0) + NoLegend()
+```
+
+## Idnets normal_cell_call
+
+```{r}
+Idents(BCdata) <- 'normal_cell_call'
+DimPlot(BCdata, reduction = "umap" ,label = TRUE)
+DimPlot(BCdata, reduction = "tsne" ,label = TRUE)
+VlnPlot(BCdata, features = c("PALLD"), sort = TRUE) + NoLegend()
+```
+
+## cancer subset
+
+```{r cancer subset}
+BCdata_cancer <-  readRDS('BCdata_subset_cancer.rds')
+Idents(BCdata_cancer) <- "celltype_minor"
+```
+
+## umap & tsne cancer cells
+
+```{r umap & tsne cancer}
+DimPlot(BCdata_cancer, reduction = "umap",label = TRUE)
+DimPlot(BCdata_cancer, reduction = "tsne" ,label = TRUE)
+```
+
+```{r violin cancer}
+VlnPlot(BCdata_cancer, features = c("PALLD"), sort = TRUE) + NoLegend()
+```
+
+## find all marker by cancer idents
+
+```{r markers by cancer}
+Idents(BCdata) <- 'normal_cell_call'
+# BCdata_markers_normal_cell_call <- FindAllMarkers(BCdata, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+BCdata_markers_normal_cell_call <- readRDS('BCdata_markers_normal_cell_call.rds')
+BCdata_markers_normal_cell_call %>%
+    group_by(cluster) %>%
+    top_n(n = 10, wt = avg_log2FC) -> top10
+DoHeatmap(BCdata, features = top10$gene) + NoLegend()
+#saveRDS(BCdata_markers_normal_cell_call, file = "BCdata_markers_normal_cell_call.rds")
+```
+
+
