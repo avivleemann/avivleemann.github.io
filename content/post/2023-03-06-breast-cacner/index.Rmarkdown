@@ -1,13 +1,14 @@
 ---
-title: single cell Breast cancer
+title: 'Breast cancer'
 author: 'Aviv Leemann'
 date: '2023-03-06'
 slug: breast-cancer
 categories: []
 tags: [Breast cancer]
-subtitle: ''
+subtitle: 'single cell analysis Breast cancer data'
 summary: ''
-authors: []
+authors: 
+ -admin
 lastmod: '2023-03-06T17:52:47+02:00'
 featured: no
 image:

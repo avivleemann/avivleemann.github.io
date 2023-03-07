@@ -1,0 +1,17 @@
+{{- define "main" -}}
+{{ partial "page_header" . }}
+<article class="article">
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      {{ .Content }}
+    </div>
+
+    {{ partial "page_footer" . }}
+
+  </div>
+</article>
+
+{{- end -}}
