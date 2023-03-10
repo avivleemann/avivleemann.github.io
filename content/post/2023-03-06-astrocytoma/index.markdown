@@ -3,8 +3,7 @@ title: atrocytoma
 author: 'Aviv Leemann'
 date: '2023-03-06'
 slug: astrocytoma
-categories: []
-tags: [astrocytoma]
+categories: ['single cell','atrocytoma']
 subtitle: ''
 summary: 'astrocytoma data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in astrocytoma data.'
 lastmod: '2023-03-06T17:48:07+02:00'

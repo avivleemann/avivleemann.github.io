@@ -4,7 +4,7 @@ title: 'Breast cancer'
 author: 'Aviv Leemann'
 date: '2023-03-06'
 slug: breast-cancer
-tags: [Breast cancer]
+categories: ['single cell','breast-cancer']
 subtitle: 'single cell Breast cancer'
 summary:  'Breast cancer data was obtained from single cell portal, Pallad expression was examined in Breast cancer data'
 lastmod: '2023-03-06T17:52:47+02:00'
