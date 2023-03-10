@@ -3,10 +3,10 @@ name = "Ocean"
 
 [light]
   # Primary
-  primary = "160442"
+  primary = "#3C15A2"
 
   # Menu
-  menu_primary = "160442" # Material 500
+  menu_primary = "#3C15A2" # Material 500
   menu_text = "#fff"
   menu_text_active = "#ffeb3b" # Material Complemantary 500
   menu_title = "#fff"

@@ -6,7 +6,7 @@ date: '2023-03-06'
 slug: breast-cancer
 categories: ['single cell','breast-cancer']
 subtitle: 'single cell Breast cancer'
-summary:  'Breast cancer data was obtained from single cell portal, single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in Breast cancer data'
+summary:  'Breast cancer data was obtained from single cell portal, Pallad expression was examined in Breast cancer data'
 lastmod: '2023-03-06T17:52:47+02:00'
 featured: no
 image:
@@ -22,7 +22,7 @@ projects: ['single cell','Breast cancer']
 
 # single cell Breast cancer -analysis
 
-Breast cancer data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in Breast cancer data.
+Breast cancer data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in Breast cancer data.\
 our lab found PALLD express in breast cancr, PALLD expression was examined between different cell type , different cluster groups, alsotop 10 mrker for each cluster was obtained
 
 ## libreries
