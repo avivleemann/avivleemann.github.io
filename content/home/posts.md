@@ -8,7 +8,6 @@ headless: true
 
 # Order that this section appears on the page.
 weight: 60
-
 title: Posts
 subtitle:
 
@@ -40,7 +39,7 @@ design:
   view: 3
   background:
     image: posts.png
-
+    image_lighten: 1.0
 
 
 
