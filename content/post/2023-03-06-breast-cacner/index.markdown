@@ -1,20 +1,20 @@
 ---
-title: single cell Breast cancer
+
+title: 'Breast cancer'
 author: 'Aviv Leemann'
 date: '2023-03-06'
 slug: breast-cancer
-categories: []
 tags: [Breast cancer]
-subtitle: ''
-summary: ''
-authors: []
+subtitle: 'single cell Breast cancer'
+summary:  'Breast cancer data was obtained from single cell portal, Pallad expression was examined in Breast cancer data'
 lastmod: '2023-03-06T17:52:47+02:00'
 featured: no
 image:
   caption: ''
-  focal_point: ''
+  focal_point: ''                                                                            
   preview_only: no
-projects: []
+projects: ['single cell','Breast cancer']
+
 ---
 
 
@@ -276,20 +276,7 @@ DoHeatmap(BCdata, features = top10$gene) + NoLegend()
 ```
 
 ## violin plot PALLD
-
-
-```r
-VlnPlot(BCdata, features = c("PALLD"), sort = TRUE) + NoLegend()
-```
-
-<img src="{{< blogdown/postref >}}index_files/figure-html/violin plot-1.jpeg" width="2100" />
-
-```r
-VlnPlot(BCdata, features = c("PALLD"), sort = TRUE,pt.size  = 0) + NoLegend()
-```
-
-<img src="{{< blogdown/postref >}}index_files/figure-html/violin plot-2.jpeg" width="2100" />
-
+               
 ## Idnets normal_cell_call
 
 

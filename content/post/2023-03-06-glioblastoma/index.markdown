@@ -1,26 +1,22 @@
 ---
-title: single cell glioblastoma
+title:  glioblastoma
 author: 'aviv leemann'
 date: '2023-03-06'
 slug: glioblastoma
 categories: []
 tags: [glioblastoma]
 subtitle: ''
-summary: ''
+summary: 'glioblastoma data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in glioblastoma data.'
 lastmod: '2023-03-06T17:07:25+02:00'
 featured: no
 image:
   caption: ''
   focal_point: ''
   preview_only: no
-projects: []
+projects: ['single cell','glioblastoma']
 ---
 
-
-
-
-
-# single cell analysis - glioblasotma
+## single cell analysis - glioblasotma
 
 glioblastoma data was obtained from single cell portal. single cell analysis executed with **R** program and Seurat package, Pallad expression was examined in glioblastoma data.
 

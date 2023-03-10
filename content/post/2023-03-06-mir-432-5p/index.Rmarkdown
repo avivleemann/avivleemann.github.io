@@ -1,0 +1,173 @@
+---
+title: 'miR-432-5p'
+author: 'Aviv leemann'
+date: '2023-03-06'
+slug: 'mir-432-5p'
+tags: 
+  -'mir-432-5p'
+subtitle: 'single cell analysis hsa-mir432-5p'
+summary: 'enrichment analysis purpose is to check if there are pathways, molecular function, biological process & cellular components that is connected or related to this bio-marker target.'
+lastmod: '2023-03-06T20:06:52+02:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: ['enrichment','mir-432-5p']
+---
+
+
+```{r setup-chunk, echo=FALSE}
+knitr::opts_chunk$set(dev = "jpeg",
+                      dpi = 300,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+## Enrichmet analysis: hsa-miR-432-5p targets
+
+enrichment analysis purpose is to check if there are:
+pathways, molecular function, biological process & cellular components that is connected or related to this bio-marker target.
+
+## libreris
+
+pacman library purpose is to load multiple libraries from a vector
+
+```{r libreris}
+library(pacman)
+lab <-  c("GO.db","GOstats","cRegulome","readxl","ggplot2","tidyverse","R.utils","MeSHDbi","AnnotationHub","KEGGREST","AnnotationDbi","org.Hs.eg.db","clusterProfiler","meshr","pathview","ReactomePA","meshes")
+pacman::p_load(lab,install = FALSE,character.only = TRUE)
+```
+
+## files
+
+loading miR targets files acquired from mirWalk
+
+```{r files}
+
+mir432_5p_targets <-read.csv("miRWalk_miRNA_Targets_432_5p_3UTR.csv")
+# annotations_ahb <- read.csv("annotations_ahb.csv")
+```
+
+## head
+
+```{r explore}
+mir432_5p_targets %>% head()
+mir432_5p_targets %>% colnames()
+```
+
+## preprocessing
+
+```{r preprocessing}
+colnames(mir432_5p_targets)[3] <- "SYMBOL"
+colnames(mir432_5p_targets)[1] <- "miR"
+colnames(mir432_5p_targets)[7] <- "score"
+
+```
+
+maps the gene to ENTREZID
+
+```{r mapIds 432}
+mir432_5p_targets$ENTREZ = mapIds(org.Hs.eg.db,
+                                  key = mir432_5p_targets$SYMBOL,  # data to use for retrieval
+                                  column =  "ENTREZID", # information to retreive for given data
+                                  keytype = "SYMBOL",multiVals =  "first" )
+```
+
+```{r bitr , warning = FALSE}
+# mir_532_5_mapIDs <- bitr( mir432_5p_targets$SYMBOL,  "SYMBOL","ENTREZID", OrgDb = org.Hs.eg.db)
+```
+
+
+## KEGG
+
+run KEGG enrichment via cluster Profiler package
+
+```{r KEGG }
+clusterProfiler_KEGG_432_5p <- enrichKEGG(mir432_5p_targets$ENTREZ)
+```
+
+
+
+
+```{r KEGG enrichment 432_5 }
+head(summary(clusterProfiler_KEGG_432_5p)[, -8])
+dotplot(clusterProfiler_KEGG_432_5p, showCategory=10) + labs(title ="hsa-miR-432-5p targets KEGG pathways")
+```
+
+## GO analysis
+
+### BP analysis
+
+no results
+
+```{r BP 432_5}
+clusterProfiler_bp_432_5p <- enrichGO(mir432_5p_targets$ENTREZ, ont="BP",OrgDb =org.Hs.eg.db)
+#summary(clusterProfiler_bp_432_5p) %>% head()
+#dotplot(clusterProfiler_bp_432_5p, showCategory=20)
+```
+
+no results
+
+### CC analysis
+
+```{r CC 432_5 }
+clusterProfiler_cc_432_5p <- enrichGO(mir432_5p_targets$ENTREZ, ont="CC",OrgDb =org.Hs.eg.db)
+head(summary(clusterProfiler_cc_432_5p)[,-8])
+dotplot(clusterProfiler_cc_432_5p, showCategory=10) + labs(title ="hsa-miR-432-5p targets CC GO")
+```
+
+```{r goplot cc}
+goplot(clusterProfiler_cc_432_5p )
+```
+
+### MF analysis
+
+```{r MF 432_5}
+clusterProfiler_mf_432_5p <- enrichGO(mir432_5p_targets$ENTREZ, ont="MF",OrgDb =org.Hs.eg.db)
+head(summary(clusterProfiler_mf_432_5p)[,-8] )
+dotplot(clusterProfiler_mf_432_5p, showCategory=10) + labs(title ="hsa-miR-432-5p targets MF GO")
+```
+
+```{r goplot mf}
+goplot(clusterProfiler_mf_432_5p )
+```
+
+## Reactome Pathways
+
+```{r reactome pathways}
+reactome_432_5<- enrichPathway(gene=mir432_5p_targets$ENTREZ, pvalueCutoff = 0.05, readable=TRUE)
+dotplot(reactome_432_5,showCategory=10) + labs(title ="hsa-miR-432-5p targets reactome pathways")
+```
+
+## MESH
+
+```{r meshDB}
+# already created 
+# creating meshDBi
+# ah <- AnnotationHub(localHub=TRUE)
+# hsa <- query(ah, c("MeSHDb", "Homo sapiens"))
+# file_hsa <- hsa[[1]]
+# db <- MeSHDbi::MeSHDb(file_hsa)
+```
+
+```{r mesh gendoo}
+# saved & read the mehses 
+# meshes432 <- enrichMeSH(mir432_5p_targets$ENTREZ, MeSHDb = db, database='gendoo', category = 'C')
+# saveRDS(meshes432,'meshes432.rds')
+meshes432 <- readRDS('meshes432.rds')
+dotplot(meshes432) + labs(title ="hsa-miR-432-5p targets mesh gendoo Diseases")
+```
+
+```{r mesh gebe2pubmed}
+# meshes432_pubmed <- enrichMeSH(mir432_5p_targets$ENTREZ, MeSHDb = db, database='gene2pubmed', category = 'C')
+# dotplot(meshes432_pubmed) + labs(title ="hsa-miR-432-5p targets mesh gene2pubmed Diseases")
+```
+
+# session info
+
+```{r session info}
+sessionInfo()[6]
+```
+

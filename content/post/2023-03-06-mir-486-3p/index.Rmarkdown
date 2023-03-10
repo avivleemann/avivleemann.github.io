@@ -1,0 +1,169 @@
+---
+title: 'miR-486-3p'
+author: 'Aviv leemann'
+date: '2023-03-06'
+slug: 'miR-486-3p'
+tags: 
+  -'miR-486-3p'
+subtitle: 'single cell analysis hsa-miR-486-3p'
+summary: 'enrichment analysis purpose is to check if there are pathways, molecular function, biological process & cellular components that is connected or related to this bio-marker target.'
+lastmod: '2023-03-06T20:06:52+02:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: ['enrichment','miR-486-3p']
+---
+
+## Enrichmet analysis: hsa-miR-486-3p targets
+
+enrichment analysis purpose is to check if there are:
+pathways, molecular function, biological process & cellular components that is connected or related to this bio-marker target.
+
+```{r setup-chunk, echo=FALSE}
+knitr::opts_chunk$set(dev = "jpeg",
+                      dpi = 300,
+                      echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+
+## libreris
+
+pacman library purpose is to load multiple libraries from a vector
+
+```{r libreris}
+library(pacman)
+lab <-  c("GO.db","GOstats","cRegulome","readxl","ggplot2","tidyverse","R.utils","MeSHDbi","AnnotationHub",
+          "AnnotationDbi","org.Hs.eg.db","clusterProfiler","meshr","pathview","ReactomePA","meshes","tidyverse")
+pacman::p_load(lab,install = FALSE,character.only = TRUE)
+```
+
+## files
+
+loading miR targets files acquired from mirWalk
+
+```{r files}
+
+mir486_3p_targets <-read.csv("miRWalk_miRNA_Targets_486_3p_3UTR.csv")
+# annotations_ahb <- read.csv("annotations_ahb.csv")
+```
+
+## Head
+
+```{r explore}
+mir486_3p_targets %>%  head()
+mir486_3p_targets %>% colnames()
+```
+
+## Pre-Processing
+
+```{r preprocessing}
+colnames(mir486_3p_targets)[3] <- "SYMBOL"
+colnames(mir486_3p_targets)[1] <- "miR"
+colnames(mir486_3p_targets)[7] <- "score"
+
+```
+
+maps the gene to ENTREZID
+
+```{r mapIds 486}
+mir486_3p_targets$ENTREZ = mapIds(org.Hs.eg.db,
+                                  key = mir486_3p_targets$SYMBOL,  # data to use for retrieval
+                                  column =  "ENTREZID", # information to retreive for given data
+                                  keytype = "SYMBOL",multiVals =  "first" )
+```
+
+## KEGG
+
+```{r KEGG enrichment 486_3}
+clusterProfiler_KEGG_486_3p <- enrichKEGG(mir486_3p_targets$ENTREZ)
+head(summary(clusterProfiler_KEGG_486_3p)[, -8])
+dotplot(clusterProfiler_KEGG_486_3p, showCategory=10) + labs(title ="hsa-miR-486-3p targets KEGG pathways")
+```
+
+## GO analysis
+
+### BP analysis
+
+```{r BP 486_3}
+clusterProfiler_bp_486_3p <- enrichGO(mir486_3p_targets$ENTREZ, ont="BP",OrgDb =org.Hs.eg.db)
+summary(clusterProfiler_bp_486_3p)[,-8] %>% head()
+dotplot(clusterProfiler_bp_486_3p, showCategory=10)+ labs(title ="hsa-miR-486-3p targets BP GO")
+```
+
+```{r goplot bp}
+goplot(clusterProfiler_bp_486_3p)
+
+```
+
+### CC analysis
+
+```{r CC 486_3 }
+clusterProfiler_cc_486_3p <- enrichGO(mir486_3p_targets$ENTREZ, ont="CC",OrgDb =org.Hs.eg.db)
+summary(clusterProfiler_cc_486_3p)[,-8] %>% head()
+dotplot(clusterProfiler_cc_486_3p, showCategory=10) + labs(title ="hsa-miR-486-3p targets CC GO")
+
+```
+
+```{r goplot cc}
+goplot(clusterProfiler_cc_486_3p)
+
+```
+
+### MF analysis
+
+```{r MF 486_3}
+clusterProfiler_mf_486_3p <- enrichGO(mir486_3p_targets$ENTREZ, ont="MF",OrgDb =org.Hs.eg.db)
+summary(clusterProfiler_mf_486_3p)[,-8] %>% head()
+dotplot(clusterProfiler_mf_486_3p, showCategory=20) + labs(title ="hsa-miR-486-3p targets MF GO")
+```
+
+```{r goplot mf}
+goplot(clusterProfiler_mf_486_3p)
+
+```
+
+## Reactome Pathways
+
+```{r reactome}
+reactome_486_3 <- enrichPathway(gene=mir486_3p_targets$ENTREZ, pvalueCutoff = 0.05, readable=TRUE)
+dotplot(reactome_486_3,showCategory=10) + labs(title ="hsa-miR-486-3p targets reactome pathways")
+
+```
+
+## MESH
+
+```{r meshDB}
+# already created 
+# creating meshDBi
+# ah <- AnnotationHub(localHub=TRUE)
+# hsa <- query(ah, c("MeSHDb", "Homo sapiens"))
+# file_hsa <- hsa[[1]]
+# db <- MeSHDbi::MeSHDb(file_hsa)
+```
+
+```{r meshes gendoo}
+# meshes486 <- enrichMeSH(mir486_3p_targets$ENTREZ, MeSHDb = db, database='gendoo', category = 'C')
+# saveRDS(meshes486,'meshes486.rds')
+meshes486 <- readRDS('meshes486.rds')
+dotplot(meshes486) + labs(title ="hsa-miR-486-3p targets mesh gendoo Diseases")
+# saveRDS(meshes486,'meshes486.rds')
+```
+
+```{r mesh gebe2pubmed}
+# meshes486_pubmed <- enrichMeSH(mir486_3p_targets$ENTREZ, MeSHDb = db, database='gene2pubmed', category = 'C')
+# dotplot(meshes486) + labs(title ="hsa-miR-486-3p targets mesh gene2pubmed Diseases")
+
+```
+
+# session info
+
+```{r session info}
+sessionInfo()[6]
+
+```
+
+
