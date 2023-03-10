@@ -7,7 +7,7 @@
 
 appearance:
   theme_day: 'Ocean'
-  font: 'Ocean'
+  font: shilan_font
   font_size: L
 
 # SEO
