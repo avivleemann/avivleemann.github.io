@@ -39,8 +39,7 @@ design:
   view: 3
   background:
     image: posts.png
-    image_lighten: 1.0
-
+    image_parallax: true
 
 
 
