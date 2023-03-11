@@ -5,6 +5,7 @@ date: '2023-03-06'
 slug: 'mir-432-5p'
 subtitle: 'single cell analysis hsa-mir432-5p'
 summary: 'enrichment analysis purpose is to check if there are pathways, molecular function, biological process & cellular components that is connected or related to this bio-marker target.'
+categories: ['enrichment','mir-432-5p']
 lastmod: '2023-03-06T20:06:52+02:00'
 featured: no
 image:
