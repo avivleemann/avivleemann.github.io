@@ -15,6 +15,7 @@ interests:
 - Computational biology
 - Artificial Intelligence
 - Bioinformatics
+- Data science
 last_name: Leemann
 social:
 - display:
